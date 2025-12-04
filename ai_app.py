@@ -1,13 +1,12 @@
 # banana_leaf_ai_app.py
-# Streamlit prototype: "BananaLeafAI - Smart Assistant"
-# Prototype dùng công thức ước lượng + phân tích màu ảnh.
+# BanaLe – Hỗ trợ công thức phù hợp với lá chuối
 
 import streamlit as st
 from PIL import Image
 import numpy as np
 import math
 
-st.set_page_config(page_title="BananaLeafAI", layout="wide", page_icon="🌿")
+st.set_page_config(page_title="BanaLe", layout="wide", page_icon="🌿")
 
 # -------------------------------------------------
 # 1) HÀM ƯỚC LƯỢNG HIỆU SUẤT CHIẾT POLYPHENOL
@@ -42,34 +41,42 @@ def recommend_process(leaf_mass_g, product_choice, yield_mg_total, mg_per_g):
     checklist.append("Cắt lá thành miếng 0.5–1 cm.")
     checklist.append("Sấy 50–60°C hoặc phơi bóng râm 1–2 giờ.")
     checklist.append(f"Chuẩn bị ethanol {st.session_state['ethanol_pct']}%.")
-    checklist.append(f"Ngâm ở {st.session_state['temp_c']}°C trong {st.session_state['time_h']} giờ.")
-    checklist.append("Lọc dung dịch, cô đặc nếu cần.")
 
     if product_choice == "Viên hút mùi":
         per_unit = 20  
         num_units = int(yield_mg_total // per_unit)
 
-        checklist.append(f"Mỗi viên cần ~{per_unit} mg polyphenol → ước tính làm được {num_units} viên.")
-        checklist.append("Trộn than hoạt tính + polyphenol + hồ tinh bột, nén khuôn, sấy 12–24h.")
+        checklist.append(f"Mỗi viên cần ~{per_unit} polyphenol → ước tính làm được {num_units} viên.")
+        checklist.append("Ngâm ở nhiệt độ phòng trong vòng 12 – 24 giờ.")
+        checklist.append("Lọc dung dịch và đun trên bếp ở nhiệt độ 60 - 70°C cho đến khi thu được chất lỏng màu xanh (polyphenol).")
+        checklist.append("Trộn than hoạt tính + polyphenol + hồ tinh bột, nén khuôn, sấy ở 50°C trong 30 phút.")
 
     elif product_choice == "Gạch sinh học":
         bã = leaf_mass_g * 0.25
-        per_brick = 50
+        per_brick = 2
         num_bricks = int(bã // per_brick)
 
-        checklist.append(f"Bã sau chiết ~{int(bã)} g → ~{num_bricks} viên gạch mini.")
-        checklist.append("Trộn bã + đất sét + trấu/mùn cưa, nén khuôn và phơi — sau đó sấy.")
+        checklist.append(f"Bã sau chiết ~{int(bã)} g → {num_bricks} viên gạch mini.")
+        checklist.append("Bã sau chiết ~2g tương ứng với 1 viên gạch.")
+        checklist.append("Trộn bã + đất sét + trấu + mùn cưa + xơ mướp, nén khuôn và phơi - sau đó sấy ở 200°C.")
 
     else:
         per_unit = 20
         num_units = int(yield_mg_total // per_unit)
+
         bã = leaf_mass_g * 0.25
-        per_brick = 50
+        per_brick = 2
         num_bricks = int(bã // per_brick)
 
+        checklist.append("Rửa sạch lá chuối, để ráo.")
+        checklist.append("Cắt lá thành miếng 0.5–1 cm.")
+        checklist.append("Sấy 50-60°C hoặc phơi bóng râm 1–2 giờ.")
+        checklist.append("Chuẩn bị ethanol 70%.")
+        checklist.append("Ngâm ở nhiệt độ phòng trong 24 giờ.")
+        checklist.append("Lọc dung dịch và đun trên bếp ở 60-70°C.")
+        checklist.append("Phần bã sau khi chiết được trộn với đất sét, vỏ trấu, mùn cưa, xơ mướp.")
         checklist.append(f"Ước tính: {num_units} viên hút mùi + {num_bricks} viên gạch mini.")
-
-    checklist.append("Lưu ý an toàn: đeo găng tay, tránh lửa khi dùng ethanol.")
+        checklist.append("Lưu ý an toàn: đeo găng tay, tránh lửa khi dùng ethanol.")
 
     return checklist
 
@@ -104,8 +111,8 @@ def analyze_image_strength(img):
 # -------------------------------------------------
 # 4) GIAO DIỆN CHÍNH
 # -------------------------------------------------
-st.title("🌿 BanaLe - Hỗ trợ công thức phù hợp với lá chuối")
-st.write("Nhập lượng lá chuối → AI sẽ tính hiệu suất, gợi ý quy trình, sản lượng & phân tích ảnh dịch chiết.")
+st.title("🌿 BanaLe – Hỗ trợ công thức phù hợp với lá chuối")
+st.write("Nhập lượng lá chuối → hệ thống sẽ tính hiệu suất, gợi ý quy trình & phân tích chất lượng polyphenol.")
 
 # ---- INPUT FORM ----
 col1, col2 = st.columns(2)
@@ -113,7 +120,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("Thông số đầu vào")
 
-    leaf_mass = st.number_input("Khối lượng lá chuối (g)", min_value=10.0, value=2000.0)
+    leaf_mass = st.number_input("Khối lượng lá chuối (g)", min_value=1.0, value=5.0)
     st.session_state['ethanol_pct'] = st.slider("Nồng độ ethanol (%)", 30, 90, 70)
     st.session_state['time_h'] = st.slider("Thời gian chiết (giờ)", 1, 72, 24)
     st.session_state['temp_c'] = st.slider("Nhiệt độ chiết (°C)", 20, 90, 65)
@@ -146,7 +153,7 @@ st.markdown("---")
 if 'calc' in st.session_state:
     total_mg, mg_per_g = st.session_state['calc']
 
-    st.header("📌 KẾT QUẢ AI")
+    st.header("📌 KẾT QUẢ")
     st.write(f"**Tổng polyphenol ước tính:** {total_mg} mg GAE")
     st.write(f"**Hiệu suất (mg/g):** {mg_per_g} mg GAE/g lá")
 
@@ -164,17 +171,16 @@ if 'calc' in st.session_state:
 
     elif product_choice == "Gạch sinh học":
         bã = leaf_mass * 0.25
-        per_brick = 50
+        per_brick = 2
         st.write(f"≈ {int(bã // per_brick)} viên gạch mini")
 
     else:
         per_unit = 20
         bã = leaf_mass * 0.25
-        per_brick = 50
+        per_brick = 2
         st.write(f"- Hút mùi: {int(total_mg // per_unit)} viên")
         st.write(f"- Gạch: {int(bã // per_brick)} viên")
 
 st.markdown("---")
 
-st.caption("Trang web được phụ trách bởi nhóm nghiên cứu khoa học: Trần Nguyễn Thanh Vy - Trịnh Công Minh Anh.")
-
+st.caption("Trang web được thực hiện bởi nhóm nghiên cứu khoa học: Trần Nguyễn Thanh Vy – Trịnh Ngọc Minh Anh")
