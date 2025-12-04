@@ -104,7 +104,7 @@ def analyze_image_strength(img):
 # -------------------------------------------------
 # 4) GIAO DIỆN CHÍNH
 # -------------------------------------------------
-st.title("🌿 BananaLeafAI — Trợ lý sản xuất thông minh từ lá chuối")
+st.title("🌿 BanaLe - Hỗ trợ công thức phù hợp với lá chuối")
 st.write("Nhập lượng lá chuối → AI sẽ tính hiệu suất, gợi ý quy trình, sản lượng & phân tích ảnh dịch chiết.")
 
 # ---- INPUT FORM ----
@@ -176,4 +176,5 @@ if 'calc' in st.session_state:
 
 st.markdown("---")
 
-st.caption("Prototype — khi có dữ liệu thật, AI sẽ được huấn luyện để cho kết quả chính xác cao hơn.")
+st.caption("Trang web được phụ trách bởi nhóm nghiên cứu khoa học: Trần Nguyễn Thanh Vy - Trịnh Công Minh Anh.")
+
